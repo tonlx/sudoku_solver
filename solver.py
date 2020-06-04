@@ -8,49 +8,34 @@ class Board:
 
     def __init__(self, grid):
         self.grid = grid
-
-    def done_across(self, row):
-        nums = set()
+    
+    def check_across(self, possible_options, row):
         for col in range(Board.size):
-            if self.grid[row][col] == 0:
-                return False
-            else:
-                nums.add(self.grid[row][col])
-        if len(nums) == Board.size:
-            return True
-        else:
-            return False
-
+            if self.grid[row][col] in possible_options: possible_options.remove(self.grid[row][col])
+        return possible_options
     
-    def done_down(self, col):
-        nums = set()
+    def check_down(self, possible_options, col):
         for row in range(Board.size):
-            if self.grid[row][col] == 0:
-                return False
-            else:
-                nums.add(self.grid[row][col])
-        if len(nums) == Board.size:
-            return True
-        else:
-            return False
+            if self.grid[row][col] in possible_options: possible_options.remove(self.grid[row][col])
+        return possible_options
     
-    def done_square(self, row, col):
+    def check_square(self, possible_options, row, col):
         small_size = int(math.sqrt(Board.size))
-        nums = set()
         corner_row = int(row / small_size) * small_size
-        corner_col = int(col / small_size) * small_size
+        corner_col = int(col / small_size) * small_size 
         for row in range(small_size):
             for col in range(small_size):
-                if self.grid[corner_row + row][corner_col + col] == 0:
-                    return False
-                else:
-                    nums.add(self.grid[corner_row + row][corner_col + col])
-        if len(nums) == Board.size:
-            return True
-        else:
-            return False
-            
+                if self.grid[corner_row + row][corner_col + col]in possible_options: possible_options.remove(self.grid[corner_row + row][corner_col + col])
+        return possible_options
 
+    def get_options(self, row, col):
+        possible_options = {1,2,3,4,5,6,7,8,9}
+        possible_options = self.check_across(possible_options, row)
+        possible_options = self.check_down(possible_options, col)
+        possible_options = self.check_square(possible_options, row, col)
+        return possible_options
+
+        
     def show(self):
         for row in range (9):
             if row % 3 == 0:
